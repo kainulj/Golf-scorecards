@@ -6,8 +6,7 @@ module.exports = {
   },
   'extends': 'eslint:recommended',
   'parserOptions': {
-    'ecmaVersion': 12,
-    'sourceType': 'module'
+    'ecmaVersion': 12
   },
   'rules': {
     'indent': [
@@ -25,6 +24,8 @@ module.exports = {
     'semi': [
       'error',
       'never'
-    ]
+    ],
+    'eqeqeq': 'error',
+    'no-trailing-spaces': 'error'
   }
 }
