@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = '/api/scorecards'
+const baseUrl = 'http://localhost:3001/api/scorecards'
 
 let token = null
 
