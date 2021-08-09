@@ -7,14 +7,20 @@ const Course = require('../models/course')
 
 scorecardRouter.get('/', async (request, response) =>  {
   const token = jwt.verify(request.token, process.env.SECRET)
-  if (!token.id) {
-    return response.status(401).json({ error: 'invalid token' })
-  }
 
-  const scorecards = await Scorecard.find({ player: ObjectId(token.id) })
-    .populate('course')
-    .populate('player')
-  response.json(scorecards.map(scorecard => scorecard.toJSON()))
+  // If the user isn't logged in the request returns example data
+  if (!token.id) {
+    const exampleCards = await Scorecard.find({ player: { $exists: false } })
+      .populate('course')
+
+    response.json(exampleCards.map(scorecard => scorecard.toJSON()))
+  } else {
+    const scorecards = await Scorecard.find({ player: ObjectId(token.id) })
+      .populate('course')
+      .populate('player')
+      
+    response.json(scorecards.map(scorecard => scorecard.toJSON()))
+  }
 })
 
 scorecardRouter.post('/', async (request, response) => {

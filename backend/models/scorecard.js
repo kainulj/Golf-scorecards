@@ -16,7 +16,6 @@ const schema = mongoose.Schema({
   },
   player: {
     type: mongoose.Types.ObjectId,
-    required: true,
     ref: 'User'
   },
   hcp: {
