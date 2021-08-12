@@ -1,4 +1,3 @@
-import './App.css'
 import React, { useEffect } from 'react'
 import {
   Switch, Route, Link
@@ -7,6 +6,11 @@ import { useDispatch } from 'react-redux'
 
 import { initScorecards } from './reducers/scorecardReducer'
 import { initCourses } from './reducers/courseReducer'
+
+import CourseList from './components/CourseList'
+import Course from './components/Course'
+import Scorecards from './components/Scorecards'
+import Login from './components/Login'
 
 const linkStyle = {
   padding: 10
@@ -25,24 +29,27 @@ function App() {
   }, [dispatch])
 
   return (
-    <div className="App">
+    <div>
       <div className="container">
         <Link style={linkStyle} to="/">Scorecards</Link>
         <Link style={linkStyle} to="/courses">Courses</Link>
         <Link style={linkStyle} to="/new-scorecards">New Scorecard</Link>
       </div>
       <Switch>
+        <Route path="/kentat/:id">
+          <Course />
+        </Route>
         <Route path='/new-scorecard'>
           New Scorecard
         </Route>
         <Route path='/courses'>
-          Courses
+          <CourseList />
         </Route>
         <Route path='/login'>
-          Login
+          <Login />
         </Route>
         <Route path='/'>
-          Scorecards
+          <Scorecards />
         </Route>
       </Switch>
     </div>
