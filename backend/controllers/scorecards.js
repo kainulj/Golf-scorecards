@@ -5,7 +5,7 @@ const Scorecard = require('../models/scorecard')
 const User = require('../models/user')
 const Course = require('../models/course')
 
-scorecardRouter.get('/', async (request, response) =>  {
+scorecardRouter.get('/', async (request, response) => {
 
   // If the user isn't logged in the request returns example data
   if (!request.token) {
@@ -28,7 +28,7 @@ const postWithoutAccount = async (request, response) => {
   const body = request.body
   const course = await Course.findById(body.course)
 
-  // Posted scorecard doesn't have the player field
+  // Posted scorecard doesn't have player field
   const scorecard = new Scorecard({
     date: body.date,
     course: course._id,
@@ -77,7 +77,7 @@ const post = async (request, response) => {
 }
 
 scorecardRouter.post('/', async (request, response) => {
-  if (request.token){
+  if (request.token) {
     post(request, response)
   } else {
     postWithoutAccount(request, response)
@@ -85,34 +85,51 @@ scorecardRouter.post('/', async (request, response) => {
 })
 
 scorecardRouter.delete('/:id', async (request, response) => {
-  const token = jwt.verify(request.token, process.env.SECRET)
-  if (!token.id) {
-    return response.status(401).json({ error: 'invalid token' })
-  }
-
-  const user = await User.findById(token.id)
   const scorecard = await Scorecard.findById(request.params.id)
 
-  if(user.id.toString() !== scorecard.player.toString()){
-    return response.status(401).json({ error: 'can only be removed by the player' })
-  }
+  // Checks if the scorecard has player field. If the field is missing
+  // anybody can remove it.
+  if (scorecard.player) {
+    if (request.token) {
+      const token = jwt.verify(request.token, process.env.SECRET)
+      if (!token.id) {
+        return response.status(401).json({ error: 'invalid token' })
+      }
 
+      const user = await User.findById(token.id)
+
+      if(user.id.toString() !== scorecard.player.toString()) {
+        return response.status(401).json({ error: 'can only be removed by the player' })
+      }
+    } else {
+      return response.status(401).json({ error: 'can only be removed by the player' })
+    }
+  }
 
   await Scorecard.findByIdAndRemove(request.params.id)
   response.status(204).end()
 })
 
 scorecardRouter.put('/:id', async (request, response) => {
-  const token = jwt.verify(request.token, process.env.SECRET)
-  if (!token.id) {
-    return response.status(401).json({ error: 'invalid token' })
-  }
-
-  const user = await User.findById(token.id)
   const scorecard = await Scorecard.findById(request.params.id)
 
-  if(user.id.toString() !== scorecard.player.toString()){
-    return response.status(401).json({ error: 'can only be modified by the player' })
+  // Checks if the scorecard has player field. If the field is missing
+  // anybody can modify it.
+  if (scorecard.player) {
+    if (request.token) {
+      const token = jwt.verify(request.token, process.env.SECRET)
+      if (!token.id) {
+        return response.status(401).json({ error: 'invalid token' })
+      }
+
+      const user = await User.findById(token.id)
+
+      if(user.id.toString() !== scorecard.player.toString()) {
+        return response.status(401).json({ error: 'can only be modified by the player' })
+      }
+    } else {
+      return response.status(401).json({ error: 'can only be modified by the player' })
+    }
   }
 
   const updatedScorecard =

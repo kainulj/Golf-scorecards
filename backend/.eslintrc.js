@@ -26,6 +26,15 @@ module.exports = {
       'never'
     ],
     'eqeqeq': 'error',
-    'no-trailing-spaces': 'error'
+    'no-trailing-spaces': 'error',
+    'no-multi-spaces': 'error',
+    'curly': [
+      'error',
+      'all'
+    ],
+    'space-before-blocks': [
+      'error',
+      'always'
+    ]
   }
 }
