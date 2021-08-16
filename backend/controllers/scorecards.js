@@ -23,7 +23,32 @@ scorecardRouter.get('/', async (request, response) =>  {
   }
 })
 
-scorecardRouter.post('/', async (request, response) => {
+// Post scorecard if user has not logged in, scorecard is added to the example data
+const postWithoutAccount = async (request, response) => {
+  const body = request.body
+  const course = await Course.findById(body.course)
+
+  // Posted scorecard doesn't have the player field
+  const scorecard = new Scorecard({
+    date: body.date,
+    course: course._id,
+    hcp: body.hcp,
+    coursehcp: body.coursehcp,
+    score: body.score,
+    adjscore: body.adjscore,
+    scorediff: body.scorediff,
+    scores: body.scores,
+    adjscores: body.adjscores
+  })
+
+  const postedScorecard = await scorecard.save()
+  await postedScorecard.populate('course').execPopulate()
+  response.json(postedScorecard.toJSON())
+
+}
+
+// Post scorecard if user has logged in
+const post = async (request, response) => {
   const token = jwt.verify(request.token, process.env.SECRET)
   if (!token.id) {
     return response.status(401).json({ error: 'invalid token' })
@@ -49,6 +74,14 @@ scorecardRouter.post('/', async (request, response) => {
   const postedScorecard = await scorecard.save()
   await postedScorecard.populate('course').populate('player').execPopulate()
   response.json(postedScorecard.toJSON())
+}
+
+scorecardRouter.post('/', async (request, response) => {
+  if (request.token){
+    post(request, response)
+  } else {
+    postWithoutAccount(request, response)
+  }
 })
 
 scorecardRouter.delete('/:id', async (request, response) => {
