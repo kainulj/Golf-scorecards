@@ -22,7 +22,7 @@ const ScorecardList = (props) => {
         {props.scorecards
           .map(sc => (
             <tr key={sc.id}>
-              <td><Link to={`/tuloskortit/${sc.id}`}>{new Intl.DateTimeFormat('fi-FI').format(new Date(sc.date))}</Link></td>
+              <td><Link to={`/scorecards/${sc.id}`}>{new Intl.DateTimeFormat('fi-FI').format(new Date(sc.date))}</Link></td>
               <td>{sc.course.name}</td>
               <td>{sc.score}</td>
               <td>{sc.adjscore}</td>

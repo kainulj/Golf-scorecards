@@ -11,6 +11,8 @@ import CourseList from './components/CourseList'
 import Course from './components/Course'
 import Scorecards from './components/Scorecards'
 import Login from './components/Login'
+import ScorecardForm from './components/ScorecardForm'
+import Scorecard from './components/Scorecard'
 
 const linkStyle = {
   padding: 10
@@ -33,17 +35,20 @@ function App() {
       <div className="container">
         <Link style={linkStyle} to="/">Scorecards</Link>
         <Link style={linkStyle} to="/courses">Courses</Link>
-        <Link style={linkStyle} to="/new-scorecards">New Scorecard</Link>
+        <Link style={linkStyle} to="/new-scorecard">New Scorecard</Link>
       </div>
       <Switch>
-        <Route path="/kentat/:id">
-          <Course />
+        <Route path="/scorecards/:id">
+          <Scorecard />
         </Route>
-        <Route path='/new-scorecard'>
-          New Scorecard
+        <Route path="/courses/:id">
+          <Course />
         </Route>
         <Route path='/courses'>
           <CourseList />
+        </Route>
+        <Route path='/new-scorecard'>
+          <ScorecardForm />
         </Route>
         <Route path='/login'>
           <Login />
