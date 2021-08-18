@@ -22,7 +22,7 @@ const schema = mongoose.Schema({
     type: Number,
     required: true
   },
-  coursehcp: {
+  playinghcp: {
     type: Number,
     required: true
   },
