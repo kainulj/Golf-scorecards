@@ -7,6 +7,10 @@ const setToken = newToken => {
   token = `bearer ${newToken}`
 }
 
+const removeToken = () => {
+  token = null
+}
+
 const getAll = () => {
   const auth = {
     headers: { Authorization: token }
@@ -41,6 +45,7 @@ const edit = async (id, editedScorecad) => {
 
 const service = {
   setToken,
+  removeToken,
   getAll,
   create,
   remove,

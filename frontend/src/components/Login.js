@@ -1,22 +1,24 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Button, Form } from 'react-bootstrap'
 import { useHistory, withRouter } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 import { login } from '../reducers/loginReducer'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 const Login = (props) => {
 
   const history = useHistory()
+  const dispatch = useDispatch()
 
-  const login = async (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault()
     try {
-      await props.login({
+      dispatch(login({
         username: event.target.username.value,
         password: event.target.password.value
-      })
+      }))
+      props.setUser(true)
       history.push('/')
     } catch (exception)  {
       console.error(exception)
@@ -28,7 +30,7 @@ const Login = (props) => {
   return (
     <div>
       <h2>Login</h2>
-      <Form onSubmit={login}>
+      <Form onSubmit={handleLogin}>
         <Form.Group>
           <Form.Label>Username</Form.Label>
           <Form.Control type="text" name="username"/>
@@ -43,12 +45,8 @@ const Login = (props) => {
   )
 }
 
-const mapDispatchToProps = {
-  login
-}
-
-export default connect(null, mapDispatchToProps)(withRouter(Login))
+export default withRouter(Login)
 
 Login.propTypes = {
-  login: PropTypes.func
+  setUser: PropTypes.func
 }

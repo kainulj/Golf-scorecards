@@ -28,8 +28,10 @@ export const logout = (history) => {
     dispatch({
       type: 'LOG_OUT'
     })
-    window.localStorage.clear()
-    history.push('/kirjaudu')
+    scorecardService.removeToken()
+    window.localStorage.removeItem('login')
+    window.localStorage.removeItem('scorecards')
+    history.push('/')
   }
 }
 

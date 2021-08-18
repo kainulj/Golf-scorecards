@@ -1,17 +1,18 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import ListGroup from 'react-bootstrap/ListGroup'
 
-const CourseList = (props) => {
+const CourseList = () => {
+
+  const courses = useSelector(state => state.courses)
 
   return (
     <div>
       <ListGroup>
-        {props.courses.map(course =>
+        {courses.map(course =>
           <ListGroup.Item key={course.id}>
-            <Link to={`kentat/${course.id}`}>{course.name}</Link>
+            <Link to={`courses/${course.id}`}>{course.name}</Link>
           </ListGroup.Item>
         )}
       </ListGroup>
@@ -19,14 +20,4 @@ const CourseList = (props) => {
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    courses: state.courses
-  }
-}
-
-export default connect(mapStateToProps)(CourseList)
-
-CourseList.propTypes = {
-  courses: PropTypes.array
-}
+export default CourseList

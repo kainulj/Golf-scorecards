@@ -11,7 +11,6 @@ const reducer = (state = initialState, action) => {
     case 'REMOVE_SCORECARD':
       return state.filter(s => s.id !== action.data.id)
     case 'EDIT_SCORECARD':
-      console.log(state.map(s => s.id !== action.data.id ? s : action.data))
       return state.map(s => s.id !== action.data.id ? s : action.data)
     default:
       return state

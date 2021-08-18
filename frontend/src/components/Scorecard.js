@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
 import { useRouteMatch } from 'react-router'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { ResponsiveContainer, LineChart, YAxis, XAxis, Line, Tooltip, ReferenceLine } from 'recharts'
 import { Table, Button } from 'react-bootstrap'
@@ -10,16 +9,23 @@ import { removeScorecard } from '../reducers/scorecardReducer'
 import ScorecardForm from './ScorecardForm'
 import { playingHcp, countStrokes } from '../utilities/scorecard'
 
-const Scorecard = (props) => {
+const Scorecard = () => {
 
 
   const history = useHistory()
+  const dispatch = useDispatch()
 
   const [editing, setEditing] = useState(false)
 
   const match = useRouteMatch('/scorecards/:id')
 
-  const [scorecard, setScorecard] = useState(match ? props.scorecards.find(sc => sc.id === match.params.id) : null)
+  const scorecard = useSelector(state => {
+    return state.scorecards.find(sc => sc.id === match.params.id)
+  })
+
+  if(scorecard === undefined) {
+    return null
+  }
 
   const calculateStrokes = () => {
     const course = scorecard.course
@@ -34,14 +40,10 @@ const Scorecard = (props) => {
 
   const remove = () => {
     if(window.confirm('Are you sure you want to remove the scorecard?')){
-      props.removeScorecard(scorecard.id)
+      dispatch(removeScorecard(scorecard.id))
       history.push('/')
     }
   }
-
-  useEffect(() => {
-    setScorecard(props.scorecards.find(sc => sc.id === match.params.id))
-  }, [props.scorecards])
 
   useEffect(() => {
     setStrokes(calculateStrokes())
@@ -49,10 +51,6 @@ const Scorecard = (props) => {
 
   const edit = () => {
     setEditing(!editing)
-  }
-
-  if(!scorecard) {
-    return null
   }
 
   if(editing){
@@ -75,7 +73,7 @@ const Scorecard = (props) => {
       <p>Strokes +/-: {scorecard.score}</p>
       <p>Adjusted score: {scorecard.adjscore}</p>
       <p>
-        Scoredifferential: {
+        Score differential: {
           Number(
             Math.round(parseFloat(scorecard.scorediff + 'e' + 2)) + 'e-' + 2
           ).toFixed(2)
@@ -123,19 +121,6 @@ const Scorecard = (props) => {
     </div>
   )
 }
-const mapStateToProps = (state) => {
-  return {
-    scorecards: state.scorecards
-  }
-}
 
-const mapDispatchToProps = {
-  removeScorecard
-}
 
-export default connect(mapStateToProps, mapDispatchToProps)(Scorecard)
-
-Scorecard.propTypes = {
-  scorecards: PropTypes.array,
-  removeScorecard: PropTypes.func
-}
+export default Scorecard

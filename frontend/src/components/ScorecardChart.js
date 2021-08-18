@@ -1,17 +1,18 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import Moment from 'moment'
 Moment.locale('fi')
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { ResponsiveContainer, ComposedChart, Line, XAxis, YAxis, Tooltip, Legend, ReferenceLine } from 'recharts'
 
-const ScorecardChart = (props) => {
+const ScorecardChart = () => {
 
-  if(props.scorecards.length < 2){
+  const scorecards = useSelector(state => state.scorecards)
+
+  if(scorecards.length < 2){
     return null
   }
 
-  const data = props.scorecards.map(s => {
+  const data = scorecards.map(s => {
     return { date: new Date(s.date), scorediff: s.scorediff }
   }).sort((i, j) => i.date > j.date)
 
@@ -62,7 +63,7 @@ const ScorecardChart = (props) => {
           <XAxis dataKey="date" type="category" allowDuplicatedCategory={false}/>
           <YAxis dataKey="scorediff"/>
           <Tooltip />
-          <Legend />
+          <Legend wrapperStyle={{ top: 600, left: 25 }}/>
           {yearlyData.map((yd, i) => (
             <Line
               dataKey="scorediff"
@@ -73,22 +74,11 @@ const ScorecardChart = (props) => {
               connectNulls
             />
           ))}
-          <ReferenceLine y={props.scorecards[0].hcp} label="HCP" stroke="black" strokeDasharray="5 5"/>
+          <ReferenceLine y={scorecards[0].hcp} label="HCP" stroke="black" strokeDasharray="5 5"/>
         </ComposedChart>
       </ResponsiveContainer>
     </div>
   )
 }
 
-
-const mapStateToProps = (state) => {
-  return {
-    scorecards: state.scorecards.sort((i, j) => i.date < j.date)
-  }
-}
-
-export default connect(mapStateToProps)(ScorecardChart)
-
-ScorecardChart.propTypes = {
-  scorecards: PropTypes.array
-}
+export default ScorecardChart

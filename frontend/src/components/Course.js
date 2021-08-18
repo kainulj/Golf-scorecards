@@ -1,21 +1,22 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { useRouteMatch } from 'react-router'
 import Table from 'react-bootstrap/Table'
 import { Link } from 'react-router-dom'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 
-const Course = (props) => {
+const Course = () => {
 
-  const match = useRouteMatch('/kentat/:id')
+  const match = useRouteMatch('/courses/:id')
 
-  const course = match ? props.courses.find(c => c.id === match.params.id) : null
+  const course =
+    useSelector(state => state.courses.find(course => course.id === match.params.id))
 
-  if(!course){
+  if(course === undefined){
     return null
   }
 
-  const scorecards = match ? props.scorecards.filter(sc => sc.course.id === match.params.id) : []
+  const scorecards =
+    useSelector(state => state.scorecards.filter(sc => sc.course.id === match.params.id))
 
   return (
     <div>
@@ -74,16 +75,4 @@ const Course = (props) => {
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    courses: state.courses,
-    scorecards: state.scorecards
-  }
-}
-
-export default connect(mapStateToProps)(Course)
-
-Course.propTypes = {
-  courses: PropTypes.array,
-  scorecards: PropTypes.array
-}
+export default Course

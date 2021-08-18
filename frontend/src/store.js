@@ -1,4 +1,4 @@
-import { combineReducers, createStore, applyMiddleware } from 'redux'
+import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import throttle from 'lodash/throttle'
 
@@ -7,6 +7,8 @@ import scorecardReducer from './reducers/scorecardReducer'
 import loginReducer from './reducers/loginReducer'
 import { tokenExpiration } from './utilities/middleware'
 import { loadState, saveState } from './utilities/localStorage'
+
+const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 const reducers = combineReducers({
   courses: courseReducer,
@@ -19,7 +21,9 @@ const persistedState = loadState()
 const store = createStore(
   reducers,
   persistedState,
-  applyMiddleware(thunk, tokenExpiration)
+  composeEnhancer(
+    applyMiddleware(thunk, tokenExpiration)
+  )
 )
 
 store.subscribe(throttle(() => {
