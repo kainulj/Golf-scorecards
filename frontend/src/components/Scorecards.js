@@ -8,11 +8,18 @@ import ScorecardList from './ScorecardList'
 import ScorecardChart from './ScorecardChart'
 
 const Scorecards = () => {
+
   const [tab, setTab] = useState('all')
 
-  const scorecards = useSelector(state =>
-    state.scorecards.sort((i, j) => i.date < j.date)
-  )
+  const scorecards = useSelector(state => {
+    if(state.scorecards){
+      return state.scorecards.sort((i, j) => i.date < j.date)
+    }
+  })
+
+  if(!scorecards){
+    return null
+  }
 
   if(scorecards.length === 0){
     return <h1>No scorecards</h1>

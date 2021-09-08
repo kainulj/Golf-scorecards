@@ -8,6 +8,7 @@ const ScorecardChart = () => {
 
   const scorecards = useSelector(state => state.scorecards)
 
+  // The chart breaks the page if there is only one scorecard
   if(scorecards.length < 2){
     return null
   }
@@ -54,7 +55,8 @@ const ScorecardChart = () => {
     }
   })
 
-  const colors = ['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf']
+  // Distinctive colors for eight years of data
+  const colors = ['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#e6ab02','#a65628','#f781bf']
 
   return (
     <div>
@@ -63,7 +65,7 @@ const ScorecardChart = () => {
           <XAxis dataKey="date" type="category" allowDuplicatedCategory={false}/>
           <YAxis dataKey="scorediff"/>
           <Tooltip />
-          <Legend wrapperStyle={{ top: 600, left: 25 }}/>
+          <Legend wrapperStyle={{ top: 570, left: 25 }}/>
           {yearlyData.map((yd, i) => (
             <Line
               dataKey="scorediff"

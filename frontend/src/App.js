@@ -24,7 +24,7 @@ function App() {
   const history = useHistory()
 
   const user = useSelector(state => state.login)
-  const [loggedIn, setLoggedIn] = useState(user !== undefined)
+  const [loggedIn, setLoggedIn] = useState(user)
 
   useEffect(() => {
     if (user) {

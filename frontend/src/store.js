@@ -26,6 +26,7 @@ const store = createStore(
   )
 )
 
+// Update store every second
 store.subscribe(throttle(() => {
   saveState(store.getState())
 }, 1000))
