@@ -65,7 +65,7 @@ const ScorecardChart = () => {
           <XAxis dataKey="date" type="category" allowDuplicatedCategory={false}/>
           <YAxis dataKey="scorediff"/>
           <Tooltip />
-          <Legend wrapperStyle={{ top: 570, left: 25 }}/>
+          <Legend wrapperStyle={{ top: 25, left: 25 }}/>
           {yearlyData.map((yd, i) => (
             <Line
               dataKey="scorediff"
