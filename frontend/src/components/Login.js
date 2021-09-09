@@ -6,6 +6,7 @@ import PropTypes from 'prop-types'
 import { login } from '../reducers/loginReducer'
 import { useDispatch } from 'react-redux'
 import UserForm from './UserForm'
+import { setNotification } from '../reducers/alertReducer'
 
 const Login = (props) => {
 
@@ -21,8 +22,8 @@ const Login = (props) => {
         username: event.target.username.value,
         password: event.target.password.value
       }))
-      window.localStorage.removeItem('scorecards')
       props.setUser(true)
+      dispatch(setNotification(`Hello ${event.target.username.value}`))
       history.push('/')
     } catch (exception)  {
       console.error(exception)

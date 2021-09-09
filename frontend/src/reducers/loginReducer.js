@@ -29,7 +29,6 @@ export const logout = (history) => {
       type: 'LOG_OUT'
     })
     scorecardService.removeToken()
-
     history.push('/')
   }
 }

@@ -1,6 +1,6 @@
 import courseService from '../services/courses'
 
-const initialState = JSON.parse(window.localStorage.getItem('courses'))
+const initialState = []
 
 const reducer = (state = initialState, action) => {
   switch(action.type) {

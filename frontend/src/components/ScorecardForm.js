@@ -1,63 +1,78 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Dropdown, DropdownButton, Table, Button, Alert } from 'react-bootstrap'
+import { Dropdown, DropdownButton, Table, Button } from 'react-bootstrap'
 import DatePicker from 'react-date-picker'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 
 import utils from '../utilities/scorecard'
 import { createScorecard, editScorecard } from '../reducers/scorecardReducer'
-import { useHistory } from 'react-router-dom'
+import { setErrorMessage } from '../reducers/alertReducer'
+import { ErrorMessage } from './Alerts'
 
 const ScorecardForm = (props) => {
 
   const history = useHistory()
   const dispatch = useDispatch()
 
-  const [showAlert, setShowAlert] = useState(false)
-
   const courses = useSelector(state => state.courses)
   const scorecards = useSelector(state => state.scorecards)
 
-  const [courseName, setCourseName] =
-    useState(props.course ? props.course.name : courses[0].name)
-
-  const [hcp, setHcp] =
-    useState(scorecards.length !== 0 ? scorecards[0].hcp : '')
-
-  const [course, setCourse] = useState(courses.find(c => c.name === courseName))
-  const [strokes, setStrokes] = useState(Array(course.pars.length).fill(''))
-  const [adjscores, setAdjscores] = useState(Array(course.pars.length).fill(''))
-  const [scores, setScores] =
-    useState(props.scores ? props.scores : Array(course.pars.length).fill(''))
+  const [courseName, setCourseName] = useState('')
+  const [hcp, setHcp] = useState(null)
+  const [course, setCourse] = useState(null)
+  const [strokes, setStrokes] = useState([])
+  const [adjscores, setAdjscores] = useState([])
+  const [scores, setScores] = useState([])
   const [date, setDate] = useState(props.date ? new Date(props.date) : new Date())
+  const [playinghcp, setPlayinghcp] = useState(null)
 
-  const [playinghcp, setPlayinghcp] =
-    useState(hcp ? utils.playingHcp(hcp, course.slope, course.cr, course.pars) : null)
+  useEffect(() => {
+    if(courses.length !== 0) {
+      setCourseName(props.course ? props.course.name : courses[0].name)
+    }
+  }, [courses])
 
   useEffect(() => {
     setCourse(courses.find(c => c.name === courseName))
   }, [courseName])
 
   useEffect(() => {
-    if(hcp)
-      setPlayinghcp(utils.playingHcp(hcp, course.slope, course.cr, course.pars))
-  }, [course])
+    if(scorecards.length !== 0) {
+      setHcp(scorecards[0].hcp)
+    }
+  }, [scorecards])
 
   useEffect(() => {
-    if(hcp) {
-      let newStrokes = course.pars.map((par, i) => {
-        return utils.countStrokes(course.hcps[i], par, playinghcp, scores[i])
-      })
-      setStrokes(newStrokes)
-      let newAdjscores = course.pars.map((par, i) => {
-        return utils.adjustedScore(course.hcps[i], par, playinghcp, scores[i])
-      })
-      setAdjscores(newAdjscores)
-    } else {
-      setStrokes(Array(course.pars.length).fill(''))
-      setAdjscores(Array(course.pars.length).fill(''))
+    if(course) {
+      setScores(props.scores ? props.scores : Array(course.pars.length).fill(''))
+      if(hcp)
+        setPlayinghcp(utils.playingHcp(hcp, course.slope, course.cr, course.pars))
     }
-  }, [playinghcp])
+  }, [course, hcp])
+
+  useEffect(() => {
+    if(course) {
+      if(playinghcp) {
+        let newStrokes = course.pars.map((par, i) => {
+          return utils.countStrokes(course.hcps[i], par, playinghcp, scores[i])
+        })
+        setStrokes(newStrokes)
+        let newAdjscores = course.pars.map((par, i) => {
+          return utils.adjustedScore(course.hcps[i], par, playinghcp, scores[i])
+        })
+        setAdjscores(newAdjscores)
+      } else {
+        setStrokes(Array(course.pars.length).fill(''))
+        setAdjscores(Array(course.pars.length).fill(''))
+      }
+    }
+  }, [playinghcp, course])
+
+  // If course aren't set yet return null
+  if(!course) {
+    return null
+  }
 
   const handleSelect = (event) => {
     setCourseName(event)
@@ -113,8 +128,10 @@ const ScorecardForm = (props) => {
   const create = (event) => {
     event.preventDefault()
     const [parsedScores, parsedStrokes, parsedAdjscores] = parseScores()
+    console.log(hcp)
     if(!hcp){
-      setShowAlert(true)
+      console.log('dsaadsdsa')
+      dispatch(setErrorMessage('Enter hcp'))
       return
     }
     const scorecard = {
@@ -136,7 +153,7 @@ const ScorecardForm = (props) => {
     event.preventDefault()
     const [parsedScores, parsedStrokes, parsedAdjscores] = parseScores()
     if(!hcp){
-      setShowAlert(true)
+      dispatch(setErrorMessage('Enter hcp'))
       return
     }
     const scorecard = {
@@ -167,7 +184,7 @@ const ScorecardForm = (props) => {
       <form onSubmit={props.editing ? edit : create} >
         <div>
           <h2>Create scorecard</h2>
-          <Alert show={showAlert} variant="warning">Enter hcp</Alert>
+          <ErrorMessage />
           <div className="input-group">
             Choose course:
             <DropdownButton id="dropdown-basic-button" title={courseName}>

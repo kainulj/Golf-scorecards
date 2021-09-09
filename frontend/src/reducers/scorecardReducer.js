@@ -1,6 +1,6 @@
 import scorecardService from '../services/scorecards'
 
-const initialState = JSON.parse(window.localStorage.getItem('scorecards'))
+const initialState = []
 
 const reducer = (state = initialState, action) => {
   switch(action.type) {

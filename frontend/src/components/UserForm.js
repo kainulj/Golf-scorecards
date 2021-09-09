@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom'
 
 import userService from '../services/users'
 import { login } from '../reducers/loginReducer'
+import { setNotification } from '../reducers/alertReducer'
 
 const UserForm = (props) => {
 
@@ -24,6 +25,7 @@ const UserForm = (props) => {
         password: event.target.password.value
       }))
       props.setUser(true)
+      dispatch(setNotification(`Hello ${event.target.username.value}`))
       history.push('/')
     } catch(exception) {
       console.log(exception)

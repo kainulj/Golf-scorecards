@@ -7,6 +7,10 @@ const CourseList = () => {
 
   const courses = useSelector(state => state.courses)
 
+  if(!courses) {
+    return null
+  }
+
   return (
     <div>
       <ListGroup>

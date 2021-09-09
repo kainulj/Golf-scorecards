@@ -5,6 +5,7 @@ import throttle from 'lodash/throttle'
 import courseReducer from './reducers/courseReducer'
 import scorecardReducer from './reducers/scorecardReducer'
 import loginReducer from './reducers/loginReducer'
+import alertReducer from './reducers/alertReducer'
 import { tokenExpiration } from './utilities/middleware'
 import { loadState, saveState } from './utilities/localStorage'
 
@@ -13,7 +14,8 @@ const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const reducers = combineReducers({
   courses: courseReducer,
   scorecards: scorecardReducer,
-  login: loginReducer
+  login: loginReducer,
+  alerts: alertReducer
 })
 
 const persistedState = loadState()

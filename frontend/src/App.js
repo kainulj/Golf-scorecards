@@ -17,6 +17,8 @@ import Scorecards from './components/Scorecards'
 import Login from './components/Login'
 import ScorecardForm from './components/ScorecardForm'
 import Scorecard from './components/Scorecard'
+import { Notification } from './components/Alerts'
+import { setNotification } from './reducers/alertReducer'
 
 function App() {
 
@@ -42,6 +44,7 @@ function App() {
 
   const handleLogout = () => {
     dispatch(logout(history))
+    dispatch(setNotification('Logged out'))
     setLoggedIn(false)
   }
 
@@ -60,6 +63,7 @@ function App() {
           : <Link style={linkStyle} to="/login">Login</Link>
         }
       </div>
+      <Notification />
       <Switch>
         <Route path="/scorecards/:id">
           <Scorecard />
