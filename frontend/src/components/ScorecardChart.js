@@ -15,15 +15,17 @@ const ScorecardChart = () => {
 
   const data = scorecards.map(s => {
     return { date: new Date(s.date), scorediff: s.scorediff }
-  }).sort((i, j) => i.date > j.date)
+  }).sort((i, j) => {
+    return i.date < j.date ? -1 : 1
+  })
 
-  const getDays = () => {
-    const gameDates = data
-      .map(sc => new Date('', sc.date.getMonth(), sc.date.getDate()))
-      .sort((i, j) => i > j)
-    return gameDates
-  }
-  const playedDates = getDays()
+
+  const playedDates = data
+    .map(sc => new Date('', sc.date.getMonth(), sc.date.getDate()))
+    .sort((i, j) => {
+      return i < j ? -1 : 1
+    })
+
 
   const seasonDates = []
   for(let d = playedDates[0]; d <= playedDates[playedDates.length - 1]; d.setDate(d.getDate() + 1)){
