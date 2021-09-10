@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom'
 
 import utils from '../utilities/scorecard'
 import { createScorecard, editScorecard } from '../reducers/scorecardReducer'
-import { setErrorMessage } from '../reducers/alertReducer'
+import { setErrorMessage, setNotification } from '../reducers/alertReducer'
 import { ErrorMessage } from './Alerts'
 
 // Form to create a scorecard. Props are only used when the scorecard is edited
@@ -141,6 +141,8 @@ const ScorecardForm = (props) => {
       adjscores: parsedAdjscores
     }
     dispatch(createScorecard(scorecard))
+    const dateString = new Intl.DateTimeFormat('fi-FI').format(new Date(date))
+    dispatch(setNotification(`Scorecard ${dateString} ${course.name} created`))
     history.push('/')
   }
 
@@ -163,6 +165,8 @@ const ScorecardForm = (props) => {
       adjscores: parsedAdjscores
     }
     dispatch(editScorecard(props.id, scorecard))
+    const dateString = new Intl.DateTimeFormat('fi-FI').format(new Date(date))
+    dispatch(setNotification(`Scorecard ${dateString} ${course.name} edited`))
     props.setEditing(false)
   }
 

@@ -13,11 +13,14 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         errorMessage: action.data.errorMessage }
-    case 'CLEAR':
+    case 'CLEAR_NOTIFICATION':
       return {
-        notification: null,
-        alert: null
-      }
+        ...state,
+        notification: null }
+    case 'CLEAR_ERRORMESSAGE':
+      return {
+        ...state,
+        errorMessage: null }
     default:
       return state
   }
@@ -36,7 +39,7 @@ export const setNotification = (notification) => {
     })
     timeOutNotification = setTimeout(() => {
       dispatch({
-        type: 'CLEAR'
+        type: 'CLEAR_NOTIFICATION'
       })
     }, 3000)
   }
@@ -44,7 +47,7 @@ export const setNotification = (notification) => {
 
 export const setErrorMessage = (errorMessage) => {
   return dispatch => {
-    // Clears the previous timeout to ensure that notification won't be cleared too early
+    // Clears the previous timeout to ensure that error message won't be cleared too early
     clearTimeout(timeOutErrorMessage)
     dispatch ({
       type: 'SET_ERRORMESSAGE',
@@ -52,7 +55,7 @@ export const setErrorMessage = (errorMessage) => {
     })
     timeOutErrorMessage = setTimeout(() => {
       dispatch({
-        type: 'CLEAR'
+        type: 'CLEAR_ERRORMESSAGE'
       })
     }, 3000)
   }

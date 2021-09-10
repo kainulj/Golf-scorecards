@@ -6,6 +6,7 @@ import { ResponsiveContainer, LineChart, YAxis, XAxis, Line, Tooltip, ReferenceL
 import { Table, Button } from 'react-bootstrap'
 
 import { removeScorecard } from '../reducers/scorecardReducer'
+import { setNotification } from '../reducers/alertReducer'
 import ScorecardForm from './ScorecardForm'
 import { playingHcp, countStrokes } from '../utilities/scorecard'
 
@@ -41,6 +42,8 @@ const Scorecard = () => {
   const remove = () => {
     if(window.confirm('Are you sure you want to remove the scorecard?')){
       dispatch(removeScorecard(scorecard.id))
+      const dateString = new Intl.DateTimeFormat('fi-FI').format(new Date(scorecard.date))
+      dispatch(setNotification(`Scorecard ${dateString} ${scorecard.course.name} removed`))
       history.push('/')
     }
   }
