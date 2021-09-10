@@ -29,7 +29,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(user)
 
   useEffect(() => {
-    if (user) {
+    if(user) {
       scorecardService.setToken(user.token)
     }
   }, [user])

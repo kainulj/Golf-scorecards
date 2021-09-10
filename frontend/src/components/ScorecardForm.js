@@ -10,6 +10,7 @@ import { createScorecard, editScorecard } from '../reducers/scorecardReducer'
 import { setErrorMessage } from '../reducers/alertReducer'
 import { ErrorMessage } from './Alerts'
 
+// Form to create a scorecard. Props are only used when the scorecard is edited
 const ScorecardForm = (props) => {
 
   const history = useHistory()
@@ -21,9 +22,9 @@ const ScorecardForm = (props) => {
   const [courseName, setCourseName] = useState('')
   const [hcp, setHcp] = useState(null)
   const [course, setCourse] = useState(null)
-  const [strokes, setStrokes] = useState([])
-  const [adjscores, setAdjscores] = useState([])
-  const [scores, setScores] = useState([])
+  const [strokes, setStrokes] = useState(Array(18).fill(''))
+  const [adjscores, setAdjscores] = useState(Array(18).fill(''))
+  const [scores, setScores] = useState(props.scores ? props.scores : Array(18).fill(''))
   const [date, setDate] = useState(props.date ? new Date(props.date) : new Date())
   const [playinghcp, setPlayinghcp] = useState(null)
 
@@ -37,37 +38,33 @@ const ScorecardForm = (props) => {
     setCourse(courses.find(c => c.name === courseName))
   }, [courseName])
 
+  /*If there are previous scorecards, set the hcp to either
+      1. hcp of the scorecard that is edited
+      2. hcp of the previous scorecard
+  */
   useEffect(() => {
     if(scorecards.length !== 0) {
-      setHcp(scorecards[0].hcp)
+      setHcp(props.hcp ? props.hcp : scorecards[0].hcp)
     }
   }, [scorecards])
 
+  // Update playing hcp after hcp of course changes
   useEffect(() => {
-    if(course) {
-      setScores(props.scores ? props.scores : Array(course.pars.length).fill(''))
-      if(hcp)
-        setPlayinghcp(utils.playingHcp(hcp, course.slope, course.cr, course.pars))
-    }
-  }, [course, hcp])
+    if(hcp && course)
+      setPlayinghcp(utils.playingHcp(hcp, course.slope, course.cr, course.pars))
+  }, [hcp, course])
 
+  // Update strokes +/- and adjusted scores after playing hcp changes
   useEffect(() => {
-    if(course) {
-      if(playinghcp) {
-        let newStrokes = course.pars.map((par, i) => {
-          return utils.countStrokes(course.hcps[i], par, playinghcp, scores[i])
-        })
-        setStrokes(newStrokes)
-        let newAdjscores = course.pars.map((par, i) => {
-          return utils.adjustedScore(course.hcps[i], par, playinghcp, scores[i])
-        })
-        setAdjscores(newAdjscores)
-      } else {
-        setStrokes(Array(course.pars.length).fill(''))
-        setAdjscores(Array(course.pars.length).fill(''))
-      }
+    if(playinghcp) {
+      setStrokes(course.pars.map((par, i) => {
+        return utils.countStrokes(course.hcps[i], par, playinghcp, scores[i])
+      }))
+      setAdjscores(course.pars.map((par, i) => {
+        return utils.adjustedScore(course.hcps[i], par, playinghcp, scores[i])
+      }))
     }
-  }, [playinghcp, course])
+  }, [playinghcp])
 
   // If course aren't set yet return null
   if(!course) {
@@ -128,9 +125,7 @@ const ScorecardForm = (props) => {
   const create = (event) => {
     event.preventDefault()
     const [parsedScores, parsedStrokes, parsedAdjscores] = parseScores()
-    console.log(hcp)
     if(!hcp){
-      console.log('dsaadsdsa')
       dispatch(setErrorMessage('Enter hcp'))
       return
     }
@@ -316,5 +311,6 @@ ScorecardForm.propTypes = {
   course: PropTypes.object,
   editing: PropTypes.bool,
   setEditing: PropTypes.func,
-  id: PropTypes.string
+  id: PropTypes.string,
+  hcp: PropTypes.string
 }

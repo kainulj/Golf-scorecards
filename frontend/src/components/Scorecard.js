@@ -61,6 +61,7 @@ const Scorecard = () => {
       setEditing={setEditing}
       date={scorecard.date}
       id={scorecard.id}
+      hcp = {scorecard.hcp}
     />
   }
 
