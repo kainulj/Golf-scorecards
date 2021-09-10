@@ -13,7 +13,9 @@ const Scorecards = () => {
 
   const scorecards = useSelector(state => {
     if(state.scorecards){
-      return state.scorecards.sort((i, j) => i.date < j.date)
+      return state.scorecards.sort((i, j) => {
+        return i.date > j.date ? -1 : 1
+      })
     }
   })
 
