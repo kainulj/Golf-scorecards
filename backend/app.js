@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
+const path = require('path')
 require('express-async-errors')
 const cors = require('cors')
 
@@ -32,5 +33,8 @@ app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
 
 app.use(middleware.errorHandler)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '/build/index.html'))
+})
 
 module.exports = app
