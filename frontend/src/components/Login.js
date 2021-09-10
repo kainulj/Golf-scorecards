@@ -6,7 +6,8 @@ import PropTypes from 'prop-types'
 import { login } from '../reducers/loginReducer'
 import { useDispatch } from 'react-redux'
 import UserForm from './UserForm'
-import { setNotification } from '../reducers/alertReducer'
+import { setErrorMessage, setNotification } from '../reducers/alertReducer'
+import { ErrorMessage } from './Alerts'
 
 const Login = (props) => {
 
@@ -17,18 +18,17 @@ const Login = (props) => {
 
   const handleLogin = (event) => {
     event.preventDefault()
-    try {
-      dispatch(login({
-        username: event.target.username.value,
-        password: event.target.password.value
-      }))
+    dispatch(login({
+      username: event.target.username.value,
+      password: event.target.password.value
+    })).then(() => {
       props.setUser(true)
       dispatch(setNotification(`Hello ${event.target.username.value}`))
+      event.target.username.value = ''
       history.push('/')
-    } catch (exception)  {
-      console.error(exception)
-    }
-    event.target.username.value = ''
+    }).catch(() => {
+      dispatch(setErrorMessage('Wrong username or password'))
+    })
     event.target.password.value = ''
   }
 
@@ -42,6 +42,7 @@ const Login = (props) => {
   return (
     <div>
       <h2>Login</h2>
+      <ErrorMessage />
       <Form onSubmit={handleLogin}>
         <Form.Group>
           <Form.Label>Username</Form.Label>
