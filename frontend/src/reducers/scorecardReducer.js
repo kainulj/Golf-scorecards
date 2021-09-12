@@ -1,8 +1,6 @@
 import scorecardService from '../services/scorecards'
 
-const initialState = []
-
-const reducer = (state = initialState, action) => {
+const reducer = (state = null, action) => {
   switch(action.type) {
     case 'INIT_SCORECARDS':
       return action.data

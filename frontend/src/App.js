@@ -28,6 +28,7 @@ function App() {
   const user = useSelector(state => state.login)
   const [loggedIn, setLoggedIn] = useState(user)
 
+  // Sets the authentication token if a user is logged in
   useEffect(() => {
     if(user) {
       scorecardService.setToken(user.token)

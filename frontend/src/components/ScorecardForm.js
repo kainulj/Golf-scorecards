@@ -40,15 +40,15 @@ const ScorecardForm = (props) => {
 
   /*If there are previous scorecards, set the hcp to either
       1. hcp of the scorecard that is edited
-      2. hcp of the previous scorecard
+      2. hcp of the latest scorecard
   */
   useEffect(() => {
-    if(scorecards.length !== 0) {
+    if(scorecards && scorecards.length !== 0) {
       setHcp(props.hcp ? props.hcp : scorecards[0].hcp)
     }
   }, [scorecards])
 
-  // Update playing hcp after hcp of course changes
+  // Update playing hcp after hcp or course changes
   useEffect(() => {
     if(hcp && course)
       setPlayinghcp(utils.playingHcp(hcp, course.slope, course.cr, course.pars))
@@ -71,10 +71,12 @@ const ScorecardForm = (props) => {
     return null
   }
 
+  // Handles course changes
   const handleSelect = (event) => {
     setCourseName(event)
   }
 
+  // When hcp is modified, update playing hcp
   const handlePlayinghcp = (event) => {
     const parsedHcp = parseFloat(event.target.value)
     if(parsedHcp && parsedHcp <= 54){
@@ -87,6 +89,7 @@ const ScorecardForm = (props) => {
     }
   }
 
+  // When score is entered, update adjusted score and strokes +/-
   const handleStrokes = (event) => {
     let newScores = [...scores]
     const score = event.target.value
@@ -107,24 +110,13 @@ const ScorecardForm = (props) => {
     return utils.playersPar(playinghcp, par, course.hcps[i])
   })
 
-  const parseScores = () => {
-    let newAdjscores = [...adjscores]
-    let newStrokes = [...strokes]
-    const editedScores = scores.map((s, i) => {
-      if(strokes[i] === 2 || s === ''){
-        newStrokes[i] = 2
-        newAdjscores[i] = utils.playersPar(playinghcp, course.pars[i], course.hcps[i]) + 2
-        return '-'
-      } else {
-        return s
-      }
-    })
-    return [editedScores, newStrokes, newAdjscores]
-  }
-
+  // Handles creating a new scorecard when save button is pressed
   const create = (event) => {
     event.preventDefault()
-    const [parsedScores, parsedStrokes, parsedAdjscores] = parseScores()
+
+    const [parsedScores, parsedStrokes, parsedAdjscores] =
+      utils.parseScores(adjscores, strokes, scores, playinghcp, course.pars, course.hcps)
+
     if(!hcp){
       dispatch(setErrorMessage('Enter hcp'))
       return
@@ -146,9 +138,13 @@ const ScorecardForm = (props) => {
     history.push('/')
   }
 
+  // Handles editing an existing scorecard when save button is pressed
   const edit = (event) => {
     event.preventDefault()
-    const [parsedScores, parsedStrokes, parsedAdjscores] = parseScores()
+
+    const [parsedScores, parsedStrokes, parsedAdjscores] =
+      utils.parseScores(adjscores, strokes, scores, playinghcp, course.pars, course.hcps)
+
     if(!hcp){
       dispatch(setErrorMessage('Enter hcp'))
       return

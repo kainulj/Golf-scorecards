@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import ListGroup from 'react-bootstrap/ListGroup'
 
+// Lists links to all courses
 const CourseList = () => {
 
   const courses = useSelector(state => state.courses)

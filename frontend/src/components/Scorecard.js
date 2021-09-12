@@ -10,6 +10,7 @@ import { setNotification } from '../reducers/alertReducer'
 import ScorecardForm from './ScorecardForm'
 import { playingHcp, countStrokes } from '../utilities/scorecard'
 
+// Componenet displays the information of a scorecard
 const Scorecard = () => {
 
 
@@ -28,6 +29,7 @@ const Scorecard = () => {
     return null
   }
 
+  // Calculates cumulative sum of the strokes +/- for the chart
   const calculateStrokes = () => {
     const course = scorecard.course
     const coursehcp = playingHcp(scorecard.hcp, course.slope, course.cr, course.pars)
@@ -48,6 +50,7 @@ const Scorecard = () => {
     }
   }
 
+  // Update strokes if scores are edited
   useEffect(() => {
     setStrokes(calculateStrokes())
   }, [scorecard.scores])
@@ -56,6 +59,7 @@ const Scorecard = () => {
     setEditing(!editing)
   }
 
+  // If edit button is pressed, display scorecardFrom with values from this card
   if(editing){
     return <ScorecardForm
       scores={scorecard.scores}

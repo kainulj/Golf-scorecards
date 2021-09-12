@@ -1,5 +1,5 @@
 .message {
-  color: blue;
+  color: #538eff;
   background: white;
   font-size: 20px;
   border-style: solid;
@@ -9,7 +9,7 @@
 }
 
 .error {
-  color: red;
+  color: #e41a1c;
   background: white;
   font-size: 20px;
   border-style: solid;

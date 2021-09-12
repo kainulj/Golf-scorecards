@@ -16,6 +16,10 @@ const Login = (props) => {
 
   const [creatingUser, setCreatingUser] = useState(false)
 
+  /* Sends the login information to the server after hte login-button is pressed.
+    If the login is successful returns to the main page and shows a welcome message.
+    If the login fails password field is cleared, and an error message is shown.
+  */
   const handleLogin = (event) => {
     event.preventDefault()
     dispatch(login({
@@ -32,6 +36,7 @@ const Login = (props) => {
     event.target.password.value = ''
   }
 
+  // Display the userForm after create user -button is pressed
   if(creatingUser) {
     return <UserForm
       setCreating={setCreatingUser}

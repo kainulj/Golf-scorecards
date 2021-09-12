@@ -19,6 +19,7 @@ const Scorecards = () => {
     }
   })
 
+  // If scorecards are not yet initialized return null
   if(!scorecards){
     return null
   }
@@ -27,6 +28,7 @@ const Scorecards = () => {
     return <h1>No scorecards</h1>
   }
 
+  // Gets the years from the scorecards for the tabs
   const years = []
   scorecards.map(sc => {
     const date = new Date(sc.date)

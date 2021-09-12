@@ -8,11 +8,13 @@ import userService from '../services/users'
 import { login } from '../reducers/loginReducer'
 import { setNotification } from '../reducers/alertReducer'
 
+// Form to create a user
 const UserForm = (props) => {
 
   const dispatch = useDispatch()
   const history = useHistory()
 
+  // Creates an user and logs in as the new user
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {

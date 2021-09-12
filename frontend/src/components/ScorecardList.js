@@ -5,6 +5,7 @@ Moment.locale('fi')
 import { Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
+// Lists all the scorecards in the scorecards prop.
 const ScorecardList = (props) => {
 
   return (

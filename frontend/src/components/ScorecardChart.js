@@ -4,6 +4,7 @@ Moment.locale('fi')
 import { useSelector } from 'react-redux'
 import { ResponsiveContainer, ComposedChart, Line, XAxis, YAxis, Tooltip, Legend, ReferenceLine } from 'recharts'
 
+// Displays a chart of the score differentials of all the scorecards
 const ScorecardChart = () => {
 
   const scorecards = useSelector(state => state.scorecards)
@@ -19,14 +20,14 @@ const ScorecardChart = () => {
     return i.date < j.date ? -1 : 1
   })
 
-
+  // Played dates without the year
   const playedDates = data
     .map(sc => new Date('', sc.date.getMonth(), sc.date.getDate()))
     .sort((i, j) => {
       return i < j ? -1 : 1
     })
 
-
+  // Gets all the dates between the first and the last date from the scorecards while ignoring the years
   const seasonDates = []
   for(let d = playedDates[0]; d <= playedDates[playedDates.length - 1]; d.setDate(d.getDate() + 1)){
     seasonDates.push(new Date(d))
@@ -39,6 +40,7 @@ const ScorecardChart = () => {
     }
   })
 
+  // Divide data by year for the chart
   const yearlyData = years.map(year => {
     const yearsData = data.filter(sc => sc.date.getFullYear() === year)
     return {

@@ -4,6 +4,7 @@ import Table from 'react-bootstrap/Table'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
+// Displays the information of a course
 const Course = () => {
 
   const match = useRouteMatch('/courses/:id')
