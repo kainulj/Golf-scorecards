@@ -2,6 +2,8 @@
 backend/node_modules
 backend/.env
 backend/requests
+backend/Procfile
+backend/.gitignore
 
 frontend/.env
 frontend/node_modules
